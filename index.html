@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LavaCar - Gestión Financiera</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .sidebar {
+            background-color: var(--secondary);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .stat-card .label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .dashboard-section {
+            display: none;
+        }
+        
+        .dashboard-section.active {
+            display: block;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar">
+                <div class="logo">
+                    <i class="fas fa-car"></i> LavaCar
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="clientes">
+                            <i class="fas fa-users"></i> Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="vehiculos">
+                            <i class="fas fa-car"></i> Vehículos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="pedidos">
+                            <i class="fas fa-clipboard-list"></i> Pedidos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="empleados">
+                            <i class="fas fa-user-tie"></i> Empleados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="finanzas">
+                            <i class="fas fa-chart-line"></i> Finanzas
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10">
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="container-fluid">
+                        <span class="navbar-brand">Panel de Control</span>
+                        <div class="d-flex">
+                            <span class="navbar-text me-3">
+                                <i class="fas fa-user-circle me-1"></i> Administrador
+                            </span>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="dashboard-section active">
+                    <div class="container-fluid py-4">
+                        <h2 class="mb-4">Dashboard</h2>
+                        
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card stat-card text-primary">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <div class="number">$4,250</div>
+                                    <div class="label">Ingresos del Mes</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card text-success">
+                                    <i class="fas fa-clipboard-check"></i>
+                                    <div class="number">42</div>
+                                    <div class="label">Pedidos Activos</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card text-info">
+                                    <i class="fas fa-users"></i>
+                                    <div class="number">28</div>
+                                    <div class="label">Clientes Registrados</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card text-warning">
+                                    <i class="fas fa-user-tie"></i>
+                                    <div class="number">5</div>
+                                    <div class="label">Empleados</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-2"></i> Ingresos Mensuales
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="incomeChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-2"></i> Servicios Más Populares
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="servicesChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-list me-2"></i> Pedidos Recientes
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Cliente</th>
+                                                        <th>Vehículo</th>
+                                                        <th>Servicio</th>
+                                                        <th>Estado</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Juan Pérez</td>
+                                                        <td>Toyota Corolla</td>
+                                                        <td>Lavado Completo</td>
+                                                        <td><span class="badge bg-success">Completado</span></td>
+                                                        <td>$45.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>María García</td>
+                                                        <td>Honda Civic</td>
+                                                        <td>Lavado Básico</td>
+                                                        <td><span class="badge bg-warning">En Proceso</span></td>
+                                                        <td>$25.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Carlos López</td>
+                                                        <td>Ford F-150</td>
+                                                        <td>Lavado Premium</td>
+                                                        <td><span class="badge bg-info">Pendiente</span></td>
+                                                        <td>$65.00</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-exclamation-circle me-2"></i> Alertas y Recordatorios
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <div>2 pedidos pendientes de confirmación</div>
+                                        </div>
+                                        <div class="alert alert-info d-flex align-items-center" role="alert">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <div>Recordatorio: Pago de nómina el próximo viernes</div>
+                                        </div>
+                                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <div>5 pedidos completados hoy</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clientes Section -->
+                <div id="clientes" class="dashboard-section">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Clientes</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Cliente
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-users me-2"></i> Lista de Clientes
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Teléfono</th>
+                                                <th>Email</th>
+                                                <th>Vehículos</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>001</td>
+                                                <td>Juan Pérez</td>
+                                                <td>555-1234</td>
+                                                <td>juan@email.com</td>
+                                                <td>2</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>002</td>
+                                                <td>María García</td>
+                                                <td>555-5678</td>
+                                                <td>maria@email.com</td>
+                                                <td>1</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>003</td>
+                                                <td>Carlos López</td>
+                                                <td>555-9012</td>
+                                                <td>carlos@email.com</td>
+                                                <td>3</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehículos Section -->
+                <div id="vehiculos" class="dashboard-section">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Vehículos</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vehiculoModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Vehículo
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-car me-2"></i> Lista de Vehículos
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Placa</th>
+                                                <th>Marca</th>
+                                                <th>Modelo</th>
+                                                <th>Año</th>
+                                                <th>Color</th>
+                                                <th>Cliente</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>ABC-123</td>
+                                                <td>Toyota</td>
+                                                <td>Corolla</td>
+                                                <td>2020</td>
+                                                <td>Rojo</td>
+                                                <td>Juan Pérez</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>XYZ-789</td>
+                                                <td>Honda</td>
+                                                <td>Civic</td>
+                                                <td>2019</td>
+                                                <td>Azul</td>
+                                                <td>María García</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>DEF-456</td>
+                                                <td>Ford</td>
+                                                <td>F-150</td>
+                                                <td>2021</td>
+                                                <td>Negro</td>
+                                                <td>Carlos López</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pedidos Section -->
+                <div id="pedidos" class="dashboard-section">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Pedidos</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pedidoModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Pedido
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-clipboard-list me-2"></i> Lista de Pedidos
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cliente</th>
+                                                <th>Vehículo</th>
+                                                <th>Servicio</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Total</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>P-001</td>
+                                                <td>Juan Pérez</td>
+                                                <td>Toyota Corolla</td>
+                                                <td>Lavado Completo</td>
+                                                <td>15/06/2023</td>
+                                                <td><span class="badge bg-success">Completado</span></td>
+                                                <td>$45.00</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>P-002</td>
+                                                <td>María García</td>
+                                                <td>Honda Civic</td>
+                                                <td>Lavado Básico</td>
+                                                <td>16/06/2023</td>
+                                                <td><span class="badge bg-warning">En Proceso</span></td>
+                                                <td>$25.00</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>P-003</td>
+                                                <td>Carlos López</td>
+                                                <td>Ford F-150</td>
+                                                <td>Lavado Premium</td>
+                                                <td>17/06/2023</td>
+                                                <td><span class="badge bg-info">Pendiente</span></td>
+                                                <td>$65.00</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empleados Section -->
+                <div id="empleados" class="dashboard-section">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Gestión de Empleados</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empleadoModal">
+                                <i class="fas fa-plus me-1"></i> Nuevo Empleado
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-user-tie me-2"></i> Lista de Empleados
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Posición</th>
+                                                <th>Teléfono</th>
+                                                <th>Salario</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>E-001</td>
+                                                <td>Roberto Silva</td>
+                                                <td>Lavador</td>
+                                                <td>555-1122</td>
+                                                <td>$1,200</td>
+                                                <td><span class="badge bg-success">Activo</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>E-002</td>
+                                                <td>Ana Martínez</td>
+                                                <td>Cajera</td>
+                                                <td>555-3344</td>
+                                                <td>$1,000</td>
+                                                <td><span class="badge bg-success">Activo</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>E-003</td>
+                                                <td>Luis Rodríguez</td>
+                                                <td>Supervisor</td>
+                                                <td>555-5566</td>
+                                                <td>$1,500</td>
+                                                <td><span class="badge bg-success">Activo</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Finanzas Section -->
+                <div id="finanzas" class="dashboard-section">
+                    <div class="container-fluid py-4">
+                        <h2 class="mb-4">Gestión Financiera</h2>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-2"></i> Resumen Financiero
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="financeChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-money-bill-wave me-2"></i> Balance Mensual
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Ingresos:</span>
+                                            <span class="text-success">$4,250.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Costos:</span>
+                                            <span class="text-danger">$1,850.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Nómina:</span>
+                                            <span class="text-danger">$1,200.00</span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Ganancia Neta:</strong>
+                                            <strong class="text-primary">$1,200.00</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-list me-2"></i> Costos del Mes
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Productos de limpieza:</span>
+                                            <span>$350.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Servicios públicos:</span>
+                                            <span>$180.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Mantenimiento:</span>
+                                            <span>$120.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Otros gastos:</span>
+                                            <span>$200.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nuevo Cliente -->
+    <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clienteModalLabel">Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombreCliente" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="nombreCliente">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoCliente" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefonoCliente">
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailCliente" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailCliente">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccionCliente" class="form-label">Dirección</label>
+                            <textarea class="form-control" id="direccionCliente" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar Cliente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nuevo Vehículo -->
+    <div class="modal fade" id="vehiculoModal" tabindex="-1" aria-labelledby="vehiculoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="vehiculoModalLabel">Nuevo Vehículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="placaVehiculo" class="form-label">Placa</label>
+                            <input type="text" class="form-control" id="placaVehiculo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="marcaVehiculo" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="marcaVehiculo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="modeloVehiculo" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="modeloVehiculo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="anioVehiculo" class="form-label">Año</label>
+                            <input type="number" class="form-control" id="anioVehiculo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="colorVehiculo" class="form-label">Color</label>
+                            <input type="text" class="form-control" id="colorVehiculo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="clienteVehiculo" class="form-label">Cliente</label>
+                            <select class="form-select" id="clienteVehiculo">
+                                <option selected>Seleccionar cliente...</option>
+                                <option>Juan Pérez</option>
+                                <option>María García</option>
+                                <option>Carlos López</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar Vehículo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nuevo Pedido -->
+    <div class="modal fade" id="pedidoModal" tabindex="-1" aria-labelledby="pedidoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pedidoModalLabel">Nuevo Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="clientePedido" class="form-label">Cliente</label>
+                            <select class="form-select" id="clientePedido">
+                                <option selected>Seleccionar cliente...</option>
+                                <option>Juan Pérez</option>
+                                <option>María García</option>
+                                <option>Carlos López</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="vehiculoPedido" class="form-label">Vehículo</label>
+                            <select class="form-select" id="vehiculoPedido">
+                                <option selected>Seleccionar vehículo...</option>
+                                <option>Toyota Corolla - ABC-123</option>
+                                <option>Honda Civic - XYZ-789</option>
+                                <option>Ford F-150 - DEF-456</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicioPedido" class="form-label">Servicio</label>
+                            <select class="form-select" id="servicioPedido">
+                                <option selected>Seleccionar servicio...</option>
+                                <option>Lavado Básico - $25.00</option>
+                                <option>Lavado Completo - $45.00</option>
+                                <option>Lavado Premium - $65.00</option>
+                                <option>Encerado - $30.00</option>
+                                <option>Limpieza Interior - $40.00</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaPedido" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fechaPedido">
+                        </div>
+                        <div class="mb-3">
+                            <label for="empleadoPedido" class="form-label">Empleado Asignado</label>
+                            <select class="form-select" id="empleadoPedido">
+                                <option selected>Seleccionar empleado...</option>
+                                <option>Roberto Silva</option>
+                                <option>Ana Martínez</option>
+                                <option>Luis Rodríguez</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Crear Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nuevo Empleado -->
+    <div class="modal fade" id="empleadoModal" tabindex="-1" aria-labelledby="empleadoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="empleadoModalLabel">Nuevo Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="nombreEmpleado" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="nombreEmpleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="posicionEmpleado" class="form-label">Posición</label>
+                            <select class="form-select" id="posicionEmpleado">
+                                <option selected>Seleccionar posición...</option>
+                                <option>Lavador</option>
+                                <option>Cajero</option>
+                                <option>Supervisor</option>
+                                <option>Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoEmpleado" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefonoEmpleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="salarioEmpleado" class="form-label">Salario</label>
+                            <input type="number" class="form-control" id="salarioEmpleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaContratacion" class="form-label">Fecha de Contratación</label>
+                            <input type="date" class="form-control" id="fechaContratacion">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button
