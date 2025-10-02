@@ -275,4 +275,22 @@ class FinanzasModule {
                         'rgba(46, 204, 113, 0.7)',
                         'rgba(155, 89, 182, 0.7)',
                         'rgba(241, 196, 15, 0.7)',
-                        'rgba(230, 126, 34
+                        'rgba(230, 126, 34, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Gastos Mensuales'
+                    }
+                }
+            }
+        });
+    }
+}
